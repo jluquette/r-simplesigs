@@ -94,8 +94,10 @@ sbs96 <- function (x=c()) {
 }
 
 sbs_cols_map <- c(
-    `C>A`='deepskyblue', `C>G`='black', `C>T`='firebrick2', `T>A`='grey', `T>C`='chartreuse3', `T>G`='pink2',
-    `G>T`='deepskyblue', `G>C`='black', `G>A`='firebrick2', `A>T`='grey', `A>G`='chartreuse3', `A>C`='pink2')
+    `C>A`='#00BFFF', `C>G`='#000000', `C>T`='#EE2C2C', `T>A`='#B6B6B6', `T>C`='#29CA00', `T>G`='#F99BAF',
+    `G>T`='#00BFFF', `G>C`='#000000', `G>A`='#EE2C2C', `A>T`='#B6B6B6', `A>G`='#29CA00', `A>C`='#F99BAF')
+    #`C>A`='deepskyblue', `C>G`='black', `C>T`='firebrick2', `T>A`='grey', `T>C`='chartreuse3', `T>G`='pink2',
+    #`G>T`='deepskyblue', `G>C`='black', `G>A`='firebrick2', `A>T`='grey', `A>G`='chartreuse3', `A>C`='pink2')
 
 #' Standard colors for single base substitutions
 #'
@@ -138,10 +140,18 @@ sbs96_cols <- function(x=names(sbs96_cols_map)) {
 #' that SBS96 channels with 0 count are not dropped, prevents a 96-element (!) color guide
 #' from being drawn, suppresses x-axis tick labels and enforces an aspect ratio.
 #'
+#' @param tx Set this to TRUE if the signatures are annotated for transcribed-strand status
+#'      T, U, B, Q, N.
 #' @returns A list of ggplot2 elements that can be `+`ed to a ggplot.
 #' @export
-geom_sbs96 <- function()
-    list(ggplot2::scale_fill_manual(values=sbs96_cols(), guide='none'),
+geom_sbs96 <- function(tx=FALSE) {
+    cols <- sbs96_cols()
+    if (tx)
+        cols <- tx_cols(cols)
+    list(ggplot2::scale_fill_manual(values=cols, guide='none'),
+        ggplot2::geom_vline(xintercept=cumsum((1+tx)*rep(16,5))+0.5, linewidth=0.15),
         ggplot2::geom_bar(),
         ggplot2::scale_x_discrete(drop=FALSE),
+        ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))),
         ggplot2::theme(aspect.ratio=1/5, axis.text.x=ggplot2::element_blank()))
+}

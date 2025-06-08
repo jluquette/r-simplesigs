@@ -53,10 +53,19 @@ id83_cols <- function(x=names(id83_cols_map)) {
 #' that ID83 channels with 0 count are not dropped, prevents a 83-element (!) color guide
 #' from being drawn, suppresses x-axis tick labels and enforces an aspect ratio.
 #'
+#' @param tx Set this to TRUE if the signatures are annotated for transcribed-strand status
+#'      T, U, B, Q, N.
 #' @returns A list of ggplot2 elements that can be `+`ed to a ggplot.
 #' @export
-geom_id83 <- function()
-    list(ggplot2::scale_fill_manual(values=id83_cols(), guide='none'),
+geom_id83 <- function(tx=FALSE) {
+    cols <- id83_cols()
+    if (tx)
+        cols <- tx_cols(cols)
+
+    list(ggplot2::scale_fill_manual(values=cols, guide='none'),
         ggplot2::geom_bar(),
+        ggplot2::geom_vline(xintercept=cumsum((1+tx)*c(6,6,6,6,6,6,6,6,6,6,6,6))+0.5, linewidth=0.15),
         ggplot2::scale_x_discrete(drop=FALSE),
+        ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))),
         ggplot2::theme(aspect.ratio=1/5, axis.text.x=ggplot2::element_blank()))
+}

@@ -130,11 +130,31 @@ dbs78_cols <- function(x=names(dbs78_cols_map)) {
 #' that DBS78 channels with 0 count are not dropped, prevents a 78-element (!) color guide
 #' from being drawn, suppresses x-axis tick labels and enforces an aspect ratio.
 #'
+#' @param tx Set this to TRUE if the signatures are annotated for transcribed-strand status
+#'      T, U, B, Q, N.
+#' @param guide Plot a color key showing the reference dinucleotides.
 #' @returns A list of ggplot2 elements that can be `+`ed to a ggplot.
 #' @export
-geom_dbs78 <- function()
-    list(ggplot2::scale_fill_manual(values=dbs78_cols(), guide='none'),
+geom_dbs78 <- function(guide=FALSE, tx=FALSE) {
+    # Adding dinuc_cols_map here allows the user to set `fill` to the ref dinuc to
+    # produce a short color key.
+    if (guide) {
+        guide <- ggplot2::guide_legend(title='Ref')
+    } else {
+        guide <- 'none'
+    }
+
+    cols <- dbs78_cols()
+    if (tx)
+        cols <- tx_cols(cols)
+
+    list(
+        ggplot2::scale_fill_manual(values=c(dinuc_cols_map, cols), guide=guide),
         ggplot2::geom_bar(),
-        ggplot2::scale_x_discrete(drop=FALSE, labels=substr(levels(dbs78()), 4, 5)),
+        ggplot2::geom_vline(xintercept=cumsum((1+tx)*c(9,6,9,6,9,6,6,9,9))+0.5, linewidth=0.15),
+        ggplot2::scale_x_discrete(drop=FALSE), #, labels=substr(levels(dbs78()), 4, 5)),
+        ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))),
         ggplot2::theme(aspect.ratio=1/5,
-            axis.text.x=ggplot2::element_text(family='monospace', angle=90, hjust=1, vjust=1/2)))
+            axis.text.x=ggplot2::element_text(angle=90, hjust=1, vjust=1/2))
+    )
+}
