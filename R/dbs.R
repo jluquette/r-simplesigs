@@ -154,7 +154,7 @@ geom_dbs78 <- function(guide=FALSE, tx=FALSE) {
         ggplot2::geom_vline(xintercept=cumsum((1+tx)*c(9,6,9,6,9,6,6,9,9))+0.5, linewidth=0.15),
         ggplot2::scale_x_discrete(drop=FALSE), #, labels=substr(levels(dbs78()), 4, 5)),
         ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))),
-        ggplot2::theme(aspect.ratio=1/5,
+        ggplot2::theme(aspect.ratio=1/4,
             axis.text.x=ggplot2::element_text(angle=90, hjust=1, vjust=1/2))
     )
 }

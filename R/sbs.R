@@ -153,5 +153,5 @@ geom_sbs96 <- function(tx=FALSE) {
         ggplot2::geom_bar(),
         ggplot2::scale_x_discrete(drop=FALSE),
         ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))),
-        ggplot2::theme(aspect.ratio=1/5, axis.text.x=ggplot2::element_blank()))
+        ggplot2::theme(aspect.ratio=1/4, axis.text.x=ggplot2::element_blank()))
 }
