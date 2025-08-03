@@ -98,6 +98,10 @@ dbs78_redundancy_map <- c(
 #' @return A factor vector.
 #' @export
 dbs78 <- function(x=c()) {
+    # allow nested calls - e.g., dbs78(dbs78(x))
+    if (is.factor(x))
+        x <- as.character(x)
+
     factor(unname(dbs78_redundancy_map[x]), levels=dbs78.channel.order)
 }
 

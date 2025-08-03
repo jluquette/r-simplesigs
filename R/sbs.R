@@ -149,6 +149,10 @@ ctx_to_mutsig <- function(x) {
 #'      a 96-dimensional signature and factorize in one step.
 #' @export
 sbs96 <- function (x=c(), convert_cosmic=TRUE) {
+    # allow nested calls - e.g., sbs96(sbs96(x))
+    if (is.factor(x))
+        x <- as.character(x)
+
     if (convert_cosmic)
         x <- cosmic_sbs_to_simplesigs(x)
 

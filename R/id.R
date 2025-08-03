@@ -12,6 +12,10 @@
 #' @return A factor vector.
 #' @export
 id83 <- function(x=c()) {
+    # allow nested calls - e.g., id83(id83(x))
+    if (is.factor(x))
+        x <- as.character(x)
+
     id83.channel.order <- paste(
         c(rep(1,24), rep(rep(2:5,each=6),2),c(2,3,3,4,4,4,5,5,5,5,5)),
         c(rep(c('Del', 'Ins'), each=12), rep(c('Del', 'Ins'), each=24), rep('Del', 11)),
