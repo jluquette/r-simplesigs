@@ -249,10 +249,12 @@ geom_sbs96 <- function(tx=FALSE) {
 #' @param weight Unquoted expression to compute channel weights (bar heights). Usually
 #'      the name of the column in `data`.
 #' @param rows Unquoted expression to define rows in plot since facet_grid is hijacked.
+#' @param scale Passed to facet_grid2(scale). Set to "free" to allow y-axis limits to change
+#'      between `rows` facets.
 #' @param aspect.ratio Numeric value describing the aspect ratio of all 6 panels combined.
 #' @return A ggplot object.
 #' @export
-plot_fancy_sbs96 <- function(data, mutsig, weight, rows=NULL, aspect.ratio=1/4) {
+plot_fancy_sbs96 <- function(data, mutsig, weight, rows=NULL, aspect.ratio=1/4, scale='free_x') {
     color_strip <- ggh4x::strip_themed(
         background_x=ggh4x::elem_list_rect(linewidth=rep(0, 6), fill=unique(sbs96_cols())),
         text_x=ggh4x::elem_list_text(face=rep('bold',6), colour=c(rep(c('white'), each=6)))
@@ -274,7 +276,7 @@ plot_fancy_sbs96 <- function(data, mutsig, weight, rows=NULL, aspect.ratio=1/4) 
             panel.spacing=ggplot2::unit(0.1, units='mm'),
             axis.text.x=ggplot2::element_text(angle=90, size=5, hjust=1, vjust=1/2, family='mono')) +
         ggh4x::facet_grid2(rows=ggplot2::vars({{ rows }}),
-            cols=ggplot2::vars(sbs6( {{ mutsig }})), scale='free_x', strip=color_strip)
+            cols=ggplot2::vars(sbs6( {{ mutsig }})), scale=scale, strip=color_strip)
 }
 
 
