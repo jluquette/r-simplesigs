@@ -137,9 +137,10 @@ dbs78_cols <- function(x=names(dbs78_cols_map)) {
 #' @param tx Set this to TRUE if the signatures are annotated for transcribed-strand status
 #'      T, U, B, Q, N.
 #' @param guide Plot a color key showing the reference dinucleotides.
+#' @param vline_col Color of the vertical lines separating the indel classes.
 #' @returns A list of ggplot2 elements that can be `+`ed to a ggplot.
 #' @export
-geom_dbs78 <- function(guide=FALSE, tx=FALSE) {
+geom_dbs78 <- function(guide=FALSE, tx=FALSE, vline_col='grey') {
     # Adding dinuc_cols_map here allows the user to set `fill` to the ref dinuc to
     # produce a short color key.
     if (guide) {
@@ -155,7 +156,7 @@ geom_dbs78 <- function(guide=FALSE, tx=FALSE) {
     list(
         ggplot2::scale_fill_manual(values=c(dinuc_cols_map, cols), guide=guide),
         ggplot2::geom_bar(),
-        ggplot2::geom_vline(xintercept=cumsum((1+tx)*c(9,6,9,6,9,6,6,9,9))+0.5, linewidth=0.15),
+        ggplot2::geom_vline(xintercept=cumsum((1+tx)*c(9,6,9,6,9,6,6,9,9))+0.5, linewidth=0.15, color=vline_col),
         ggplot2::scale_x_discrete(drop=FALSE), #, labels=substr(levels(dbs78()), 4, 5)),
         ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))),
         ggplot2::theme(aspect.ratio=1/4,

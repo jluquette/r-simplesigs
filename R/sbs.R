@@ -213,14 +213,15 @@ sbs96_cols <- function(x=names(sbs96_cols_map)) {
 #'
 #' @param tx Set this to TRUE if the signatures are annotated for transcribed-strand status
 #'      T, U, B, Q, N.
+#' @param vline_col Color of the vertical lines separating the groups of channels.
 #' @returns A list of ggplot2 elements that can be `+`ed to a ggplot.
 #' @export
-geom_sbs96 <- function(tx=FALSE) {
+geom_sbs96 <- function(tx=FALSE, vline_col='grey') {
     cols <- sbs96_cols()
     if (tx)
         cols <- tx_cols(cols)
     list(ggplot2::scale_fill_manual(values=cols, guide='none'),
-        ggplot2::geom_vline(xintercept=cumsum((1+tx)*rep(16,5))+0.5, linewidth=0.15),
+        ggplot2::geom_vline(xintercept=cumsum((1+tx)*rep(16,5))+0.5, linewidth=0.15, color=vline_col),
         ggplot2::geom_bar(),
         ggplot2::scale_x_discrete(drop=FALSE),
         ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))),
@@ -252,9 +253,10 @@ geom_sbs96 <- function(tx=FALSE) {
 #' @param scale Passed to facet_grid2(scale). Set to "free" to allow y-axis limits to change
 #'      between `rows` facets.
 #' @param aspect.ratio Numeric value describing the aspect ratio of all 6 panels combined.
+#' @param vline_col Color of the vertical lines separating the groups of channels.
 #' @return A ggplot object.
 #' @export
-plot_fancy_sbs96 <- function(data, mutsig, weight, rows=NULL, aspect.ratio=1/4, scale='free_x') {
+plot_fancy_sbs96 <- function(data, mutsig, weight, rows=NULL, aspect.ratio=1/4, scale='free_x', vline_col='grey') {
     color_strip <- ggh4x::strip_themed(
         background_x=ggh4x::elem_list_rect(linewidth=rep(0, 6), fill=unique(sbs96_cols())),
         text_x=ggh4x::elem_list_text(face=rep('bold',6), colour=c(rep(c('white'), each=6)))
@@ -262,7 +264,7 @@ plot_fancy_sbs96 <- function(data, mutsig, weight, rows=NULL, aspect.ratio=1/4, 
     ggplot2::ggplot(data, ggplot2::aes(x=sbs96({{ mutsig }}), fill=sbs96({{ mutsig }}), weight={{ weight }})) +
         ggplot2::scale_fill_manual(values=sbs96_cols(), guide='none') +
         ggplot2::geom_bar() + #width=1) +
-        ggplot2::geom_vline(xintercept=16 + 0.9/2) +    # geom_bar width is 0.9 by default
+        ggplot2::geom_vline(xintercept=16 + 0.9/2, color=vline_col) +   # geom_bar width is 0.9 by default
         ggplot2::theme_classic() +
         ggplot2::scale_y_continuous(expand=ggplot2::expansion(c(0, 0.05))) +
         ggplot2::xlab('Trinucleotide context') +
